@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card text-center">
+    <div class="card-header">
+        Check-In Status
+    </div>
+    <div class="card-body p-5">
+        {% if status_type == 'success' %}
+        <div class="text-success mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-check-lg"
+                viewBox="0 0 16 16">
+                <path
+                    d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z" />
+            </svg>
+        </div>
+        {% elif status_type == 'warning' %}
+        <div class="text-warning mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+            </svg>
+        </div>
+        {% else %}
+        <div class="text-danger mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg>
+        </div>
+        {% endif %}
+
+        <h2 class="card-title my-3 {{ status_type }}">{{ status_message }}</h2>
+
+        <hr>
+
+        <div class="text-start d-inline-block mt-3">
+            <p><strong>Name:</strong> {{ participant.first_name }} {{ participant.last_name }}</p>
+            <p><strong>Email:</strong> {{ participant.email }}</p>
+            <p><strong>Company:</strong> {{ participant.company|default:"-" }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-secondary">{{ participant.status }}</span></p>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        EventHub Check-In System
+    </div>
+</div>
+{% endblock %}

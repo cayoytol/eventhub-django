@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-white text-center py-4">
+        <h2 class="mb-0">Event Registration</h2>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="first_name" class="form-label">First Name *</label>
+                <input type="text" class="form-control {% if errors.first_name %}is-invalid{% endif %}" id="first_name"
+                    name="first_name" value="{{ data.first_name|default:'' }}" required>
+                {% if errors.first_name %}
+                <div class="invalid-feedback">{{ errors.first_name }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name *</label>
+                <input type="text" class="form-control {% if errors.last_name %}is-invalid{% endif %}" id="last_name"
+                    name="last_name" value="{{ data.last_name|default:'' }}" required>
+                {% if errors.last_name %}
+                <div class="invalid-feedback">{{ errors.last_name }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address *</label>
+                <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="email"
+                    name="email" value="{{ data.email|default:'' }}" required>
+                {% if errors.email %}
+                <div class="invalid-feedback">{{ errors.email }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number *</label>
+                <input type="tel" class="form-control {% if errors.phone %}is-invalid{% endif %}" id="phone"
+                    name="phone" value="{{ data.phone|default:'' }}" required>
+                {% if errors.phone %}
+                <div class="invalid-feedback">{{ errors.phone }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="company" class="form-label">Company (Optional)</label>
+                <input type="text" class="form-control" id="company" name="company"
+                    value="{{ data.company|default:'' }}">
+            </div>
+
+            <div class="mb-4 form-check">
+                <input type="checkbox" class="form-check-input {% if errors.agreement %}is-invalid{% endif %}"
+                    id="agreement" name="agreement" required>
+                <label class="form-check-label" for="agreement">I agree to the terms and conditions *</label>
+                {% if errors.agreement %}
+                <div class="invalid-feedback d-block">{{ errors.agreement }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
