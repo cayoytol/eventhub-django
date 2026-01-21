@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.http import require_POST
 from django.utils import timezone
 from .models import Participant
 
@@ -74,6 +75,26 @@ def success_view(request, qr_token):
         'qr_image': qr_base64
     })
 
+@require_POST
+def cancel_view(request, qr_token):
+    participant = get_object_or_404(Participant, qr_token=qr_token)
+    
+    if participant.status == 'Checked-in':
+        return render(request, 'participants/cancel_result.html', {
+            'participant': participant,
+            'message': "Cannot cancel registration. You have already checked in.",
+            'status_type': "danger"
+        })
+    
+    participant.status = 'Cancelled'
+    participant.save()
+    
+    return render(request, 'participants/cancel_result.html', {
+        'participant': participant,
+        'message': "Your registration has been successfully cancelled.",
+        'status_type': "success"
+    })
+
 def checkin_view(request, qr_token):
     participant = get_object_or_404(Participant, qr_token=qr_token)
     status_message = ""
@@ -95,6 +116,23 @@ def checkin_view(request, qr_token):
         'participant': participant,
         'status_message': status_message,
         'status_type': status_type
+    })
+
+@staff_member_required
+def dashboard_view(request):
+    total_count = Participant.objects.count()
+    registered_count = Participant.objects.filter(status='Registered').count()
+    checked_in_count = Participant.objects.filter(status='Checked-in').count()
+    cancelled_count = Participant.objects.filter(status='Cancelled').count()
+    
+    recent_participants = Participant.objects.all().order_by('-created_at')[:10]
+    
+    return render(request, 'participants/dashboard.html', {
+        'total_count': total_count,
+        'registered_count': registered_count,
+        'checked_in_count': checked_in_count,
+        'cancelled_count': cancelled_count,
+        'recent_participants': recent_participants
     })
 
 @staff_member_required

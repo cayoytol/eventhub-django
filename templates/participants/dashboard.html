@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Organizer Dashboard</h2>
+        <a href="{% url 'export_participants' %}" class="btn btn-success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-file-earmark-spreadsheet me-2" viewBox="0 0 16 16">
+                <path
+                    d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+            </svg>
+            Export to Excel
+        </a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Participants</div>
+                <div class="card-body">
+                    <h1 class="card-title">{{ total_count }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Registered</div>
+                <div class="card-body">
+                    <h1 class="card-title">{{ registered_count }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Checked-in</div>
+                <div class="card-body">
+                    <h1 class="card-title">{{ checked_in_count }}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Cancelled</div>
+                <div class="card-body">
+                    <h1 class="card-title">{{ cancelled_count }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Last 10 Registrations
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Registered At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in recent_participants %}
+                        <tr>
+                            <td>{{ p.first_name }} {{ p.last_name }}</td>
+                            <td>{{ p.email }}</td>
+                            <td>{{ p.company|default:"-" }}</td>
+                            <td>
+                                {% if p.status == 'Registered' %}
+                                <span class="badge bg-success">Registered</span>
+                                {% elif p.status == 'Checked-in' %}
+                                <span class="badge bg-info">Checked-in</span>
+                                {% elif p.status == 'Cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ p.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ p.created_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No participants found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

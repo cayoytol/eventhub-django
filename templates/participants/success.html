@@ -25,7 +25,19 @@
             <small>You can take a screenshot of this page.</small>
         </div>
 
-        <a href="{% url 'register' %}" class="btn btn-outline-secondary mt-3">Register Another Person</a>
+        <div class="mt-4">
+            <a href="{% url 'register' %}" class="btn btn-outline-secondary">Register Another Person</a>
+        </div>
+
+        <div class="mt-4 pt-3 border-top">
+            <form action="{% url 'cancel_registration' participant.qr_token %}" method="post"
+                onsubmit="return confirm('Are you sure you want to cancel your registration? This action cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-danger text-decoration-none btn-sm">
+                    Cancel Registration
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
